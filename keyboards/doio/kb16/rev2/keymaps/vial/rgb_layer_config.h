@@ -1,0 +1,69 @@
+#pragma once
+#include QMK_KEYBOARD_H
+
+// ----- Neutral / utility -----
+#define C_OFF        (HSV){ .h = 0,   .s = 0,   .v = 0   }
+#define C_DIM_WHITE  (HSV){ .h = 0,   .s = 0,   .v = 80  }
+#define C_WHITE      (HSV){ .h = 0,   .s = 0,   .v = 255 }
+
+// ----- Primary colors -----
+#define C_RED        (HSV){ .h = 0,   .s = 255, .v = 180 }
+#define C_GREEN      (HSV){ .h = 85,  .s = 255, .v = 180 }
+#define C_BLUE       (HSV){ .h = 170, .s = 255, .v = 180 }
+
+// ----- Secondary colors -----
+#define C_YELLOW     (HSV){ .h = 43,  .s = 255, .v = 200 }
+#define C_CYAN       (HSV){ .h = 128, .s = 255, .v = 180 }
+#define C_MAGENTA    (HSV){ .h = 213, .s = 255, .v = 180 }
+
+// ----- Warm / accent -----
+#define C_ORANGE     (HSV){ .h = 21,  .s = 255, .v = 220 }
+#define C_AMBER      (HSV){ .h = 32,  .s = 255, .v = 220 }
+#define C_PINK       (HSV){ .h = 235, .s = 200, .v = 220 }
+
+// ----- Cool / muted -----
+#define C_TEAL       (HSV){ .h = 100, .s = 200, .v = 180 }
+#define C_AQUA       (HSV){ .h = 120, .s = 180, .v = 200 }
+#define C_INDIGO     (HSV){ .h = 191, .s = 255, .v = 160 }
+#define C_PURPLE     (HSV){ .h = 191, .s = 255, .v = 180 }
+#define C_LAVENDER   (HSV){ .h = 200, .s = 120, .v = 200 }
+
+// ----- Status / semantic -----
+#define C_SUCCESS    C_GREEN
+#define C_WARNING    C_AMBER
+#define C_ERROR      C_RED
+#define C_INFO       C_CYAN
+
+// ----- Base color per layer -----
+static const HSV layer_base_hsv[] PROGMEM = {
+    [0] = C_OFF,
+    [1] = C_GREEN,
+    [2] = C_PURPLE,
+    [3] = C_CYAN,
+    [4] = C_OFF,
+    // Any unspecified layer defaults elsewhere
+};
+
+// One override entry = "On layer L, set key (row,col) to color"
+typedef struct {
+    uint8_t layer;
+    uint8_t row;
+    uint8_t col;
+    HSV     hsv;
+} layer_key_hsv_t;
+
+// ----- Per-key overrides table -----
+// Add/remove lines here; no code changes elsewhere.
+static const layer_key_hsv_t layer_key_overrides[] PROGMEM = {
+    // Primary Layer 0
+    { 0, 3, 3, C_AQUA }, // BUILD
+
+    
+    // XCODE Layer 4
+    { 4, 0, 0, C_RED }, // BUILD
+    { 4, 0, 1, C_AMBER }, // TEST
+    { 4, 0, 2, C_GREEN }, // RUN
+    { 4, 0, 3, C_RED }, // STOP
+
+    { 3, 0, 3, C_RED }, // BOOTLOADER
+};
