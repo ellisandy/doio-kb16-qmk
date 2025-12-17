@@ -21,11 +21,11 @@
 
 // Xcode shortcut aliases
 #define XCODE_BUILD         G(KC_B)      // Cmd+B
-#define XCODE_TEST          G(KC_T)      // Cmd+T
+#define XCODE_TEST          G(KC_U)      // Cmd+T
 #define XCODE_RUN           G(KC_R)      // Cmd+R
 #define XCODE_STOP          G(KC_DOT)    // Cmd+.
 
-#define XCODE_GPT_HELP       G(KC_0)      // Cmd+0 (Navigator)
+#define XCODE_GPT_HELP      G(KC_0)      // Cmd+0 (Navigator)
 #define XCODE_NAV_PROJECT   G(KC_1)      // Cmd+1 (Project navigator)
 #define XCODE_NAV_TEST      G(KC_8)      // Cmd+8 (Test navigator)
 
@@ -51,7 +51,10 @@ enum custom_keycodes {
     MAC_OPEN_MAIL,
     MAC_OPEN_SLACK,
     MAC_OPEN_ZOOM,
+    MAC_OPEN_BAMBU,
 };
+
+#define ZOOM_TOGGLE_MUTE G(S(KC_A))
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -77,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0         1        2        3         4      */
     [0] = LAYOUT(
-                 _______, _______, _______, _______, KC_MPLY,
+                 ZOOM_TOGGLE_MUTE, _______, _______, _______, KC_MPLY,
                  _______, _______, _______, _______, TO(0),
                  _______, _______, _______, _______, KC_MUTE,
                  _______, MAC_OPEN_ZOOM, MAC_OPEN_SLACK, MAC_OPEN_MAIL
@@ -96,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0        1        2        3        4       */
     [1] = LAYOUT(
-                 _______, _______, _______, _______, _______,
+                 MAC_OPEN_BAMBU, _______, _______, _______, _______,
                  _______, _______, _______, _______, _______,
                  _______, _______, _______, _______, _______,
                  _______, _______, _______, _______
@@ -226,6 +229,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 launch_app_via_spotlight("zoom", 75, 75);
             }
             return false;
+
+        case MAC_OPEN_BAMBU:
+            if (record->event.pressed) {
+                // Try common Spotlight names for the app. Adjust to your installed app name if needed.
+                launch_app_via_spotlight("BambuStudio", 75, 75);
+            }
+            return false;
     }
     return true;
 }
@@ -283,4 +293,3 @@ bool rgb_matrix_indicators_user(void) {
     }
     return true;
 }
-

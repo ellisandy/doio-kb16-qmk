@@ -56,14 +56,73 @@ typedef struct {
 // Add/remove lines here; no code changes elsewhere.
 static const layer_key_hsv_t layer_key_overrides[] PROGMEM = {
     // Primary Layer 0
-    { 0, 3, 3, C_AQUA }, // BUILD
+    { 0, 0, 3, C_OFF},     // NO-OP
+    { 0, 0, 2, C_OFF },    // NO-OP
+    { 0, 0, 1, C_OFF },    // NO-OP
+    { 0, 0, 0, C_INDIGO }, // Mute/Un-Mute
+    
+    { 0, 1, 3, C_OFF }, // NO-OP
+    { 0, 1, 2, C_OFF }, // NO-OP
+    { 0, 1, 1, C_OFF }, // NO-OP
+    { 0, 1, 0, C_OFF }, // NO-OP
+    
+    { 0, 2, 3, C_OFF }, // NO-OP
+    { 0, 2, 2, C_OFF }, // NO-OP
+    { 0, 2, 1, C_OFF }, // NO-OP
+    { 0, 2, 0, C_OFF }, // NO-OP
+    
+    { 0, 3, 3, C_AQUA },  // MAIL
+    { 0, 3, 2, C_RED },   // ZOOM
+    { 0, 3, 1, C_GREEN }, // SLACK
+    { 0, 3, 0, C_OFF },   // SLACK
 
+    // Primary Layer 1
+    { 1, 0, 0, C_BLUE}, // NO-OP
+    { 1, 0, 1, C_OFF }, // NO-OP
+    { 1, 0, 2, C_OFF }, // NO-OP
+    { 1, 0, 3, C_OFF }, // NO-OP
+    
+    { 1, 1, 0, C_OFF }, // NO-OP
+    { 1, 1, 1, C_OFF }, // NO-OP
+    { 1, 1, 2, C_OFF }, // NO-OP
+    { 1, 1, 3, C_OFF }, // NO-OP
+    
+    { 1, 2, 0, C_OFF }, // NO-OP
+    { 1, 2, 1, C_OFF }, // NO-OP
+    { 1, 2, 2, C_OFF }, // NO-OP
+    { 1, 2, 3, C_OFF }, // NO-OP
+    
+    { 1, 3, 0, C_OFF }, // NO-OP
+    { 1, 3, 1, C_OFF }, // NO-OP
+    { 1, 3, 2, C_OFF }, // NO-OP
+    { 1, 3, 3, C_OFF }, // NO-OP
+
+    // Primary Layer 2
+    { 2, 0, 0, C_OFF }, // NO-OP
+    { 2, 0, 1, C_OFF }, // NO-OP
+    { 2, 0, 2, C_OFF }, // NO-OP
+    { 2, 0, 3, C_OFF }, // NO-OP
+    
+    { 2, 1, 0, C_OFF }, // NO-OP
+    { 2, 1, 1, C_OFF }, // NO-OP
+    { 2, 1, 2, C_OFF }, // NO-OP
+    { 2, 1, 3, C_OFF }, // NO-OP
+    
+    { 2, 2, 0, C_OFF }, // NO-OP
+    { 2, 2, 1, C_OFF }, // NO-OP
+    { 2, 2, 2, C_OFF }, // NO-OP
+    { 2, 2, 3, C_OFF }, // NO-OP
+    
+    { 2, 3, 0, C_OFF }, // NO-OP
+    { 2, 3, 1, C_OFF }, // NO-OP
+    { 2, 3, 2, C_OFF }, // NO-OP
+    { 2, 3, 3, C_OFF }, // NO-OP
     
     // XCODE Layer 4
-    { 4, 0, 0, C_RED }, // BUILD
+    { 4, 0, 0, C_RED },   // BUILD
     { 4, 0, 1, C_AMBER }, // TEST
     { 4, 0, 2, C_GREEN }, // RUN
-    { 4, 0, 3, C_RED }, // STOP
+    { 4, 0, 3, C_RED },   // STOP
 
     { 3, 0, 3, C_RED }, // BOOTLOADER
 };
