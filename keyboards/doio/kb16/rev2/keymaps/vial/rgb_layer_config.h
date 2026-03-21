@@ -37,7 +37,7 @@
 // ----- Base color per layer -----
 static const HSV layer_base_hsv[] PROGMEM = {
     [0] = C_OFF,
-    [1] = C_GREEN,
+    [1] = C_TEAL,
     [2] = C_PURPLE,
     [3] = C_CYAN,
     [4] = C_OFF,
@@ -56,12 +56,13 @@ typedef struct {
 // Add/remove lines here; no code changes elsewhere.
 static const layer_key_hsv_t layer_key_overrides[] PROGMEM = {
     // Primary Layer 0
-    { 0, 0, 3, C_OFF},     // NO-OP
+    { 0, 2, 0, C_YELLOW },  // WORK SCENE (HYPR+F13)
+    { 0, 0, 3, C_GREEN },     // Video/no-Video
     { 0, 0, 2, C_OFF },    // NO-OP
     { 0, 0, 1, C_OFF },    // NO-OP
     { 0, 0, 0, C_INDIGO }, // Mute/Un-Mute
     
-    { 0, 1, 3, C_OFF }, // NO-OP
+    { 0, 1, 3, C_RED }, // BOOT / RESET
     { 0, 1, 2, C_OFF }, // NO-OP
     { 0, 1, 1, C_OFF }, // NO-OP
     { 0, 1, 0, C_OFF }, // NO-OP
@@ -69,33 +70,34 @@ static const layer_key_hsv_t layer_key_overrides[] PROGMEM = {
     { 0, 2, 3, C_OFF }, // NO-OP
     { 0, 2, 2, C_OFF }, // NO-OP
     { 0, 2, 1, C_OFF }, // NO-OP
-    { 0, 2, 0, C_OFF }, // NO-OP
     
-    { 0, 3, 3, C_AQUA },  // MAIL
-    { 0, 3, 2, C_RED },   // ZOOM
-    { 0, 3, 1, C_GREEN }, // SLACK
-    { 0, 3, 0, C_OFF },   // SLACK
+    { 0, 3, 3, C_YELLOW },  // DEADWOOD (HYPR+F17)
+    { 0, 3, 2, C_RED },   // ZOOM (HYPR+F15)
+    { 0, 3, 1, C_GREEN }, // SLACK (HYPR+F16)
+    { 0, 3, 0, C_BLUE },  // OUTLOOK (HYPR+F14)
 
-    // Primary Layer 1
-    { 1, 0, 0, C_BLUE}, // NO-OP
-    { 1, 0, 1, C_OFF }, // NO-OP
-    { 1, 0, 2, C_OFF }, // NO-OP
-    { 1, 0, 3, C_OFF }, // NO-OP
+    // Primary Layer 1 - Windows test layer
+    { 1, 0, 0, C_ORANGE },   // AUX mute
+    { 1, 0, 1, C_OFF },      // NO-OP
+    { 1, 0, 2, C_OFF },      // NO-OP
+    { 1, 0, 3, C_OFF },      // NO-OP
     
-    { 1, 1, 0, C_OFF }, // NO-OP
-    { 1, 1, 1, C_OFF }, // NO-OP
-    { 1, 1, 2, C_OFF }, // NO-OP
-    { 1, 1, 3, C_OFF }, // NO-OP
+    { 1, 1, 0, C_OFF },      // NO-OP
+    { 1, 1, 1, C_OFF },      // NO-OP
+    { 1, 1, 2, C_OFF },      // NO-OP
+    { 1, 1, 3, C_OFF },      // NO-OP
     
-    { 1, 2, 0, C_OFF }, // NO-OP
-    { 1, 2, 1, C_OFF }, // NO-OP
-    { 1, 2, 2, C_OFF }, // NO-OP
-    { 1, 2, 3, C_OFF }, // NO-OP
+    { 1, 2, 0, C_GREEN },    // F13 spare / game launch-ish
+    { 1, 2, 1, C_OFF },      // NO-OP
+    { 1, 2, 2, C_OFF },      // NO-OP
+    { 1, 2, 3, C_OFF },      // NO-OP
     
-    { 1, 3, 0, C_OFF }, // NO-OP
-    { 1, 3, 1, C_OFF }, // NO-OP
-    { 1, 3, 2, C_OFF }, // NO-OP
-    { 1, 3, 3, C_OFF }, // NO-OP
+    { 1, 3, 0, C_PINK },     // Discord mute
+    { 1, 3, 1, C_BLUE },     // F14
+    { 1, 3, 2, C_PURPLE },   // F15
+    { 1, 3, 3, C_AMBER },    // F16
+    { 1, 0, 4, C_YELLOW },   // Cycle layers button
+    { 1, 2, 4, C_RED },      // Input 2 mute
 
     // Primary Layer 2
     { 2, 0, 0, C_OFF }, // NO-OP

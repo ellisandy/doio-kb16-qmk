@@ -52,9 +52,11 @@ enum custom_keycodes {
     MAC_OPEN_SLACK,
     MAC_OPEN_ZOOM,
     MAC_OPEN_BAMBU,
+    MAC_OPEN_OUTLOOK,
+    MAC_ZOOM_MUTE,
+    MAC_ZOOM_VIDEO,
+    CYCLE_LAYER,
 };
-
-#define ZOOM_TOGGLE_MUTE G(S(KC_A))
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -80,10 +82,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0         1        2        3         4      */
     [0] = LAYOUT(
-                 ZOOM_TOGGLE_MUTE, _______, _______, _______, KC_MPLY,
-                 _______, _______, _______, _______, TO(0),
-                 _______, _______, _______, _______, KC_MUTE,
-                 _______, MAC_OPEN_ZOOM, MAC_OPEN_SLACK, MAC_OPEN_MAIL
+                 G(S(KC_A)), _______, _______, G(S(KC_V)), CYCLE_LAYER,
+                 _______, _______, _______, QK_BOOT, TO(0),
+                 HYPR(KC_F13), _______, _______, _______, KC_MUTE,
+                 HYPR(KC_F14), HYPR(KC_F15), HYPR(KC_F16), HYPR(KC_F17)
             ),
 
 /*
@@ -99,10 +101,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0        1        2        3        4       */
     [1] = LAYOUT(
-                 MAC_OPEN_BAMBU, _______, _______, _______, _______,
+                 KC_F17, _______, _______, _______, CYCLE_LAYER,
                  _______, _______, _______, _______, _______,
-                 _______, _______, _______, _______, _______,
-                 _______, _______, _______, _______
+                 KC_F13, _______, _______, _______, KC_F24,
+                 C(S(A(KC_M))), C(S(A(KC_S))), KC_F15, KC_F16
             ),
 
 /*
@@ -118,7 +120,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0        1        2        3        4       */
     [2] = LAYOUT(
-                _______, _______, _______, _______, _______,
+                _______, _______, _______, _______, CYCLE_LAYER,
                 _______, _______, _______, _______, _______,
                 _______, _______, _______, _______, _______,
                 _______, _______, _______, _______
@@ -138,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0        1        2        3        4        */
     [3] = LAYOUT(
-                RM_SPDD, RM_SPDU, _______, QK_BOOT, _______,
+                RM_SPDD, RM_SPDU, _______, QK_BOOT, CYCLE_LAYER,
                 RM_SATD, RM_SATU, _______, _______, _______,
                 RM_PREV, RM_NEXT, RM_HUEU, _______, _______,
                 RM_TOGG, RM_VALD, RM_HUED, RM_VALU
@@ -157,7 +159,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*  Row:    0        1        2        3        4        */
     /*  XCode Keys */
     [4] = LAYOUT(
-                XCODE_BUILD, XCODE_TEST, XCODE_RUN, XCODE_STOP, _______,
+                XCODE_BUILD, XCODE_TEST, XCODE_RUN, XCODE_STOP, CYCLE_LAYER,
                 XCODE_GPT_HELP, XCODE_NAV_PROJECT, XCODE_NAV_TEST, XCODE_TOGGLE_DEBUG, _______,
                 XCODE_COMMENT, XCODE_JUMP_DEF, XCODE_OPEN_QUICKLY, XCODE_FIND_PROJECT, _______,
                 XCODE_STEP_OVER, XCODE_STEP_INTO, XCODE_STEP_OUT, XCODE_CONTINUE
@@ -174,11 +176,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [0] = { ENCODER_CCW_CW(KC_MPRV, KC_MNXT), ENCODER_CCW_CW(TO(4), TO(1)), ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
-    [1] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(TO(0), TO(2)), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [2] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(TO(1), TO(3)), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [3] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(TO(2), TO(4)), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [4] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(TO(3), TO(0)), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [0] = { ENCODER_CCW_CW(KC_MPRV, KC_MNXT), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [1] = { ENCODER_CCW_CW(KC_F18, KC_F19), ENCODER_CCW_CW(KC_F20, KC_F21), ENCODER_CCW_CW(KC_F22, KC_F23) },
+    [2] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [3] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [4] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
 };
 #endif
 
@@ -206,6 +208,12 @@ static void launch_app_via_spotlight(const char *name, uint16_t initial_delay_ms
 /* MACROS */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case CYCLE_LAYER:
+            if (record->event.pressed) {
+                uint8_t layer = get_highest_layer(layer_state);
+                layer_move((layer + 1) % 5);
+            }
+            return false;
         case CMD_SPACE_HOME:
             if (record->event.pressed) {
                 launch_app_via_spotlight("home", 50, 75);
@@ -230,6 +238,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
+        case MAC_OPEN_OUTLOOK:
+            if (record->event.pressed) {
+                launch_app_via_spotlight("outlook", 150, 150);
+            }
+            return false;
+        case MAC_ZOOM_VIDEO:
+            if (record->event.pressed) {
+                launch_app_via_spotlight("zoom", 150, 150);
+                wait_ms(150);
+                tap_code16(G(S(KC_V)));
+            }
+            return false;
+        case MAC_ZOOM_MUTE:
+            if (record->event.pressed) {
+                launch_app_via_spotlight("zoom", 150, 150);
+                wait_ms(150);
+                tap_code16(G(S(KC_A)));
+            }
+            return false;
+            
         case MAC_OPEN_BAMBU:
             if (record->event.pressed) {
                 // Try common Spotlight names for the app. Adjust to your installed app name if needed.
@@ -293,3 +321,4 @@ bool rgb_matrix_indicators_user(void) {
     }
     return true;
 }
+
