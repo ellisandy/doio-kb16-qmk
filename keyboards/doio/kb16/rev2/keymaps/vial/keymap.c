@@ -101,10 +101,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0        1        2        3        4       */
     [1] = LAYOUT(
-                 KC_F17, _______, _______, _______, CYCLE_LAYER,
+                 S(KC_TAB), KC_F12, C(KC_F10), A(C(KC_U)), CYCLE_LAYER,
                  _______, _______, _______, _______, _______,
                  KC_F13, _______, _______, _______, KC_F24,
-                 C(S(A(KC_M))), C(S(A(KC_S))), KC_F15, KC_F16
+                 A(S(KC_O)), KC_MPLY, KC_F15, KC_F16
             ),
 
 /*

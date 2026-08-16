@@ -77,10 +77,10 @@ static const layer_key_hsv_t layer_key_overrides[] PROGMEM = {
     { 0, 3, 0, C_BLUE },  // OUTLOOK (HYPR+F14)
 
     // Primary Layer 1 - Windows test layer
-    { 1, 0, 0, C_ORANGE },   // AUX mute
-    { 1, 0, 1, C_OFF },      // NO-OP
-    { 1, 0, 2, C_OFF },      // NO-OP
-    { 1, 0, 3, C_OFF },      // NO-OP
+    { 1, 0, 0, C_YELLOW },   // Steam overlay back (Shift+Tab)
+    { 1, 0, 1, C_RED },      // Screenshot (F12)
+    { 1, 0, 2, C_GREEN },    // Mark clip (Ctrl+F10)
+    { 1, 0, 3, C_PURPLE },   // Start Discord stream (Alt+Ctrl+U)
     
     { 1, 1, 0, C_OFF },      // NO-OP
     { 1, 1, 1, C_OFF },      // NO-OP
