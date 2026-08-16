@@ -16,8 +16,8 @@
 
 #include QMK_KEYBOARD_H
 
-// OLED animation
-#include "lib/layer_status/layer_status.h"
+// OLED: per-layer machine name, drawn double-height
+extern const unsigned char font[];
 
 // Xcode shortcut aliases
 #define XCODE_BUILD         G(KC_B)      // Cmd+B
@@ -107,23 +107,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  A(S(KC_O)), KC_MPLY, KC_F15, KC_F16
             ),
 
-/*
+/*  LINUX LAYER - Oracle Linux 9 / GNOME 40
        ┌───┬───┬───┬───┐   ┌───┐ ┌───┐
-       │   │   │   │   │   │   │ │   │
+       │Ovw│App│A↹ │Trm│   │Cyc│ │TO0│
        ├───┼───┼───┼───┤   └───┘ └───┘
-       │   │   │   │   │
+       │◀Ti│Max│Rst│Ti▶│
        ├───┼───┼───┼───┤
-       │   │   │   │   │      ┌───┐
-       ├───┼───┼───┼───┤      │   │
-       │   │   │   │   │      └───┘
+       │◀Ws│Ws▶│Scr│Are│      ┌───┐
+       ├───┼───┼───┼───┤      │Mut│
+       │Lck│Cls│Hid│Ntf│      └───┘
        └───┴───┴───┴───┘
+    Knob1 ↺↻ workspace  |  Knob2 ↺↻ browser tab  |  Knob3 ↺↻ volume
 */
     /*  Row:    0        1        2        3        4       */
+    /*  Linux (Oracle Linux 9 / GNOME 40) */
     [2] = LAYOUT(
-                _______, _______, _______, _______, CYCLE_LAYER,
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______
+                KC_LGUI,      G(KC_A),      A(KC_TAB),    C(A(KC_T)),   CYCLE_LAYER,
+                G(KC_LEFT),   G(KC_UP),     G(KC_DOWN),   G(KC_RGHT),   TO(0),
+                G(S(KC_PGUP)),G(S(KC_PGDN)),KC_PSCR,      S(KC_PSCR),   KC_MUTE,
+                G(KC_L),      A(KC_F4),     G(KC_H),      G(KC_V)
             ),
 
 
@@ -164,23 +166,189 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 XCODE_COMMENT, XCODE_JUMP_DEF, XCODE_OPEN_QUICKLY, XCODE_FIND_PROJECT, _______,
                 XCODE_STEP_OVER, XCODE_STEP_INTO, XCODE_STEP_OUT, XCODE_CONTINUE
             ),
+
+/*  HOMELAB - property automation, driven from the MacBook
+       ┌───┬───┬───┬───┐   ┌───┐ ┌───┐
+       │   │   │   │   │   │Cyc│ │TO0│
+       ├───┼───┼───┼───┤   └───┘ └───┘
+       │   │   │   │   │
+       ├───┼───┼───┼───┤
+       │   │   │   │   │      ┌───┐
+       ├───┼───┼───┼───┤      │Mut│
+       │   │   │   │   │      └───┘
+       └───┴───┴───┴───┘
+    Deliberately KC_NO rather than _______: layers are exclusive, so transparent
+    keys here would fall through and fire layer 0 (Zoom mute, QK_BOOT, the Hyper
+    launchers). An empty layer should be genuinely empty.
+
+    When filling this in: HYPR(KC_F18)..HYPR(KC_F24) are unclaimed. Layer 1 uses
+    bare F18-F24 on its encoders, which is a different keycode, so there is no
+    collision.
+*/
+    /*  Row:    0        1        2        3        4        */
+    [5] = LAYOUT(
+                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CYCLE_LAYER,
+                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(0),
+                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MUTE,
+                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+            ),
 };
 
 #ifdef OLED_ENABLE
-    bool oled_task_user(void) {
-        render_layer_status();
 
-        return true;
+/* At double height a line holds 10 characters (128px / 12px per glyph).
+ * Strings below are split on their first space onto two stacked lines when
+ * both halves fit; otherwise they are drawn as one centered line. */
+#define OLED_2X_COLS 10
+
+static const char *const layer_names[] = {
+    [0] = "Work Mac",
+    [1] = "Gaming Rig",
+    [2] = "Oracle Linux",
+    [3] = "Lights",
+    [4] = "Personal Mac",   /* still carries the Xcode bindings for now */
+    [5] = "Homelab",
+};
+
+/* Friendly name flashed on the OLED when a key is pressed, so you get
+ * confirmation of what you just fired. Grid keys only: the knob presses are
+ * deliberately absent so that cycling layers shows the new layer name instead.
+ * NULL = no label, screen keeps showing the layer name. */
+#define KEY_FLASH_MS 1000
+
+static const char *const key_labels[][4][4] = {
+    [0] = {
+        { "Zoom Mute", NULL,        NULL,        "Zoom Video" },
+        { NULL,        NULL,        NULL,        "Bootload"   },
+        { "Work Scene",NULL,        NULL,        NULL         },
+        { "Outlook",   "F15 Zoom",  "F16 Slack", "Deadwood"   },
+    },
+    [1] = {
+        { "Steam Ovl", "Screenshot","Mark Clip", "Discord Go" },
+        { NULL,        NULL,        NULL,        "Bootload"   },
+        { "F13",       NULL,        NULL,        NULL         },
+        { "Disc Mute", "Play Pause","F15",       "F16"        },
+    },
+    [2] = {
+        { "Overview",  "App Grid",  "Last App",  "Terminal"   },
+        { "Tile Left", "Maximize",  "Restore",   "Tile Right" },
+        { "Win Prev",  "Win Next",  "Screenshot","Area Shot"  },
+        { "Lock",      "Close Win", "Hide Win",  "Notifs"     },
+    },
+    [3] = {
+        { "Speed -",   "Speed +",   NULL,        "Bootload"   },
+        { "Sat -",     "Sat +",     NULL,        NULL         },
+        { "FX Prev",   "FX Next",   "Hue +",     NULL         },
+        { "RGB Toggle","Bright -",  "Hue -",     "Bright +"   },
+    },
+    [4] = {
+        { "Build",     "Test",      "Run",       "Stop"       },
+        { "Navigator", "Project",   "Tests",     "Debug Area" },
+        { "Comment",   "Jump Def",  "Open Quick","Find Proj"  },
+        { "Step Over", "Step Into", "Step Out",  "Continue"   },
+    },
+    [5] = {   /* Homelab - empty until the automation keys are bound */
+        { NULL, NULL, NULL, NULL },
+        { NULL, NULL, NULL, NULL },
+        { NULL, NULL, NULL, NULL },
+        { NULL, NULL, NULL, NULL },
+    },
+};
+
+static const char *key_flash_label = NULL;
+static uint32_t    key_flash_time  = 0;
+
+/* Draw one glyph scaled 2x from the 6x8 font: 12x16 pixels at (x, y). */
+static void draw_char_2x(uint8_t x, uint8_t y, char c) {
+    const uint16_t glyph = ((uint8_t)c - OLED_FONT_START) * OLED_FONT_WIDTH;
+
+    for (uint8_t col = 0; col < OLED_FONT_WIDTH; col++) {
+        const uint8_t bits = font[glyph + col];
+
+        for (uint8_t row = 0; row < 8; row++) {
+            const bool on = bits & (1 << row);
+            const uint8_t px = x + (col * 2);
+            const uint8_t py = y + (row * 2);
+
+            oled_write_pixel(px,     py,     on);
+            oled_write_pixel(px + 1, py,     on);
+            oled_write_pixel(px,     py + 1, on);
+            oled_write_pixel(px + 1, py + 1, on);
+        }
     }
+}
+
+/* Horizontally centered double-height string. */
+static void draw_line_2x(uint8_t y, const char *s) {
+    const uint8_t len   = strlen(s);
+    const uint8_t width = len * 12;
+    uint8_t       x     = (width >= OLED_DISPLAY_WIDTH) ? 0 : (OLED_DISPLAY_WIDTH - width) / 2;
+
+    for (uint8_t i = 0; i < len; i++) {
+        draw_char_2x(x + (i * 12), y, s[i]);
+    }
+}
+
+/* Draw a string, stacking it on two lines at the first space when both halves
+ * fit; otherwise one centered line. */
+static void draw_text_2x(const char *s) {
+    const char *space = strchr(s, ' ');
+
+    if (space != NULL) {
+        const uint8_t first  = (uint8_t)(space - s);
+        const uint8_t second = strlen(space + 1);
+
+        if (first > 0 && first <= OLED_2X_COLS && second > 0 && second <= OLED_2X_COLS) {
+            char head[OLED_2X_COLS + 1];
+            memcpy(head, s, first);
+            head[first] = '\0';
+
+            draw_line_2x(0,  head);        // two stacked lines fill the 32px height
+            draw_line_2x(16, space + 1);
+            return;
+        }
+    }
+
+    draw_line_2x(8, s);                    // one line, vertically centered
+}
+
+bool oled_task_user(void) {
+    static uint8_t     last_layer = 0xFF;
+    static const char *last_shown = NULL;
+
+    const uint8_t layer = get_highest_layer(layer_state);
+
+    /* A pressed key takes the screen briefly, then it reverts to the layer. */
+    if (key_flash_label != NULL && timer_elapsed32(key_flash_time) >= KEY_FLASH_MS) {
+        key_flash_label = NULL;
+    }
+
+    if (layer != last_layer || key_flash_label != last_shown) {
+        last_layer = layer;
+        last_shown = key_flash_label;
+
+        oled_clear();
+        if (key_flash_label != NULL) {
+            draw_text_2x(key_flash_label);
+        } else {
+            draw_text_2x(layer < ARRAY_SIZE(layer_names) && layer_names[layer] != NULL
+                             ? layer_names[layer]
+                             : "Layer ?");
+        }
+    }
+
+    return false;
+}
 #endif
 
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [0] = { ENCODER_CCW_CW(KC_MPRV, KC_MNXT), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [1] = { ENCODER_CCW_CW(KC_F18, KC_F19), ENCODER_CCW_CW(KC_F20, KC_F21), ENCODER_CCW_CW(KC_F22, KC_F23) },
-    [2] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [2] = { ENCODER_CCW_CW(G(KC_PGUP), G(KC_PGDN)), ENCODER_CCW_CW(C(KC_PGUP), C(KC_PGDN)), ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [3] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
     [4] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [5] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX), ENCODER_CCW_CW(XXXXXXX, XXXXXXX), ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
 };
 #endif
 
@@ -207,11 +375,26 @@ static void launch_app_via_spotlight(const char *name, uint16_t initial_delay_ms
 
 /* MACROS */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#ifdef OLED_ENABLE
+    /* Flash the friendly name of whatever was just pressed. Only the 4x4 grid
+     * (cols 0-3); col 4 is the knob presses, which are left to show the layer. */
+    if (record->event.pressed) {
+        const uint8_t layer = get_highest_layer(layer_state);
+        const uint8_t row   = record->event.key.row;
+        const uint8_t col   = record->event.key.col;
+
+        if (layer < ARRAY_SIZE(key_labels) && row < 4 && col < 4 && key_labels[layer][row][col] != NULL) {
+            key_flash_label = key_labels[layer][row][col];
+            key_flash_time  = timer_read32();
+        }
+    }
+#endif
+
     switch (keycode) {
         case CYCLE_LAYER:
             if (record->event.pressed) {
                 uint8_t layer = get_highest_layer(layer_state);
-                layer_move((layer + 1) % 5);
+                layer_move((layer + 1) % 6);
             }
             return false;
         case CMD_SPACE_HOME:
@@ -268,57 +451,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-/* RGB */
-#include QMK_KEYBOARD_H
-#include "rgb_layer_config.h"
-
-static inline void set_key_hsv(uint8_t row, uint8_t col, HSV hsv) {
-    uint8_t led = g_led_config.matrix_co[row][col];
-    if (led == NO_LED) return;
-
-    RGB rgb = hsv_to_rgb(hsv);
-    rgb_matrix_set_color(led, rgb.r, rgb.g, rgb.b);
-}
-
-static inline HSV read_hsv_from_progmem(const HSV *p) {
-    HSV out;
-    memcpy_P(&out, p, sizeof(out));
-    return out;
-}
-
-static void apply_base_layer_color(uint8_t layer) {
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-
-    HSV hsv = C_RED; // fallback default
-    if (layer < (sizeof(layer_base_hsv) / sizeof(layer_base_hsv[0]))) {
-        hsv = read_hsv_from_progmem(&layer_base_hsv[layer]);
-    }
-
-    rgb_matrix_sethsv_noeeprom(hsv.h, hsv.s, hsv.v);
-}
-
-void keyboard_post_init_user(void) {
-    apply_base_layer_color(get_highest_layer(layer_state));
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    apply_base_layer_color(get_highest_layer(state));
-    return state;
-}
-
-bool rgb_matrix_indicators_user(void) {
-    if (!rgb_matrix_is_enabled()) return false;
-
-    uint8_t layer = get_highest_layer(layer_state);
-
-    for (uint8_t i = 0; i < (sizeof(layer_key_overrides) / sizeof(layer_key_overrides[0])); i++) {
-        layer_key_hsv_t e;
-        memcpy_P(&e, &layer_key_overrides[i], sizeof(e)); // pull entry from PROGMEM
-
-        if (e.layer == layer) {
-            set_key_hsv(e.row, e.col, e.hsv);
-        }
-    }
-    return true;
-}
-
+/* RGB is owned by Vial (VIALRGB_ENABLE). No per-layer coloring here by design:
+ * pick effects/colors live in the Vial GUI. The old palette + per-key override
+ * table lives in rgb_layer_config.h, now unreferenced, if it is ever wanted back.
+ */

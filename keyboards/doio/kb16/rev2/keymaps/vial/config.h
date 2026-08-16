@@ -10,3 +10,6 @@
 #define STM32_ONBOARD_EEPROM_SIZE 4098
 #define DYNAMIC_KEYMAP_LAYER_COUNT 12
 #define DYNAMIC_KEYMAP_MACRO_COUNT 100
+
+/* Keep the layer-name OLED lit permanently (core default is 60000 = blank after 60s). */
+#define OLED_TIMEOUT 0
